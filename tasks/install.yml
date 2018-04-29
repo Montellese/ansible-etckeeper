@@ -30,11 +30,6 @@
     - etckeeper
   notify: Record changes in etckeeper
 
-- name: Remove new .gitignore items from tracking.
-  shell: cd /etc/ && git reset "{{ item }}"
-  with_items: "{{ etckeeper_gitignore }}"
-  when: etckeeper_vcs == 'git' and gitignore_status is changed
-
 - name: Configure etckeeper disable bzr.
   lineinfile:
     dest=/etc/etckeeper/etckeeper.conf
@@ -54,6 +49,11 @@
 - name: Initialize etckeeper repository.
   command: etckeeper init
   when: bzr_config_status is changed or vcs_config_status is changed
+
+- name: Remove new .gitignore items from tracking.
+  shell: cd /etc/ && git reset "{{ item }}"
+  with_items: "{{ etckeeper_gitignore }}"
+  when: etckeeper_vcs == 'git' and gitignore_status is changed
 
 - name: Install tig (git ncurses interface).
   apt:
