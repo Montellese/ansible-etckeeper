@@ -44,7 +44,7 @@ that controls the version control system that etckeeper will use.
   this Ansible role has only been tested with Git.
   If etckeeper has already been installed, this variable has no effect.
 
-There is a configuration variable (with example in ``defaults/main.yml``) 
+There is a configuration variable (with example in ``defaults/main.yml``)
 for specific additional files to ignore by git:
 
 * **etckeeper_gitignore** - *string*  (
@@ -110,6 +110,36 @@ installations and commits, and also uses a shell action to perform commits.
      - name: Record other changes for this play in etckeeper commit
        shell: if etckeeper unclean; then etckeeper commit '3rd play pt. 2'; fi
 
+### The first part of a playbook I currently use
+
+```
+## Playbook for etckeeper install
+- name: install etckeeper by itself to initialize etc git-repository (this takes a while).
+  hosts: servers
+  user: root
+  vars_files:
+    - production/vars/site.yml
+  roles:
+  - { role: expansible.etckeeper, install: true }
+## Do not add any other roles to this play!
+
+## Main playbook
+- name: Configure a server.
+  hosts: servers
+  user: root
+  vars_files:
+    - production/vars/.site.yml
+
+  roles:
+    - { role: record.etckeeper, etckeeper_message: 'Ansible changes at start of mailcow playbook' }
+
+    - willshersystems.sshd
+    - { role: record.etckeeper, etckeeper_message: 'Ansible changes due to willshersystems.sshd' }
+
+    - tersmitten.fail2ban
+    - { role: record.etckeeper, etckeeper_message: 'Ansible changes due to tersmitten.fail2ban' }
+```
+
 License
 -------
 
@@ -121,4 +151,3 @@ Author Information
 You can contact the original author at [alex.dupuy at mac.com](mailto:alex.dupuy%40mac.com).
 
 This fork modified by Christian Wagner
-
