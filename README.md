@@ -1,6 +1,6 @@
 ansible-etckeeper
 =================
-Tested to work in Vagrant Debian 9 and Ubuntu 14.04
+- Tested to work in Vagrant Debian 9 and Ubuntu 14.04
 
 Ansible role to install, configure, and use etckeeper.
 
