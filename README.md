@@ -9,7 +9,7 @@ This fork is a somewhat simplified version of the original role.
 Requirements
 ------------
 
-* Developed and tested with Ansible 1.4 - 1.9
+* Developed and tested with Ansible 2.4+
 * Debian/Ubuntu system (python-apt needed)
 
 Role Variables
@@ -47,7 +47,7 @@ that controls the version control system that etckeeper will use.
 There is a configuration variable (with example in ``defaults/main.yml``)
 for specific additional files to ignore by git:
 
-* **etckeeper_gitignore** - *string*  
+* **etckeeper_gitignore** - *string*
 
 Dependencies
 ------------
