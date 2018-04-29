@@ -1,6 +1,6 @@
 ansible-etckeeper
 =================
-[![Build Status](https://travis-ci.org/chriswayg/ansible-etckeeper.svg?branch=master)](https://travis-ci.org/chriswayg/ansible-etckeeper)
+Tested to work in Vagrant Debian 9 and Ubuntu 14.04
 
 Ansible role to install, configure, and use etckeeper.
 
