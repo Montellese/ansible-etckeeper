@@ -47,7 +47,7 @@ that controls the version control system that etckeeper will use.
 There is a configuration variable (with example in ``defaults/main.yml``)
 for specific additional files to ignore by git:
 
-* **etckeeper_gitignore** - *string*  (
+* **etckeeper_gitignore** - *string*  
 
 Dependencies
 ------------
