@@ -1,21 +1,28 @@
 ---
-- name: Create gitignore
-  command: touch /etc/.gitignore
-  args:
-    creates: /etc/.gitignore
+- name: Check if gitignore exists.
+  stat:
+    path: "/etc/.gitignore"
+  register: p
+
+- name: Create gitignore, if it does not exist.
+  file:
+    path: /etc/.gitignore
+    state: touch
+  when: not p.stat.exists
 
 - name: Add entries to .gitignore
-  lineinfile: 
+  lineinfile:
     dest: '/etc/.gitignore'
-    insertbefore: 'BOF'
     line: "{{ item }}"
-  with_items: etckeeper_gitignore
+    state: present
+  with_items: "{{ etckeeper_gitignore }}"
   when: etckeeper_vcs == 'git'
+  register: gitignore_status
 
-- name: Install etckeeper
-  apt: 
+- name: Install etckeeper.
+  apt:
     pkg: "{{ item }}"
-    state: installed
+    state: present
     install_recommends: no
     update_cache: yes
   with_items:
@@ -23,7 +30,12 @@
     - etckeeper
   notify: Record changes in etckeeper
 
-- name: Configure etckeeper disable bzr
+- name: Remove new .gitignore items from tracking.
+  shell: cd /etc/ && git reset "{{ item }}"
+  with_items: "{{ etckeeper_gitignore }}"
+  when: etckeeper_vcs == 'git' and gitignore_status is changed
+
+- name: Configure etckeeper disable bzr.
   lineinfile:
     dest=/etc/etckeeper/etckeeper.conf
     regexp='^.*(VCS="bzr")'
@@ -31,7 +43,7 @@
     backrefs=yes
   register: bzr_config_status
 
-- name: Configure etckeeper enable VCS
+- name: Configure etckeeper enable VCS.
   lineinfile:
     dest=/etc/etckeeper/etckeeper.conf
     regexp='^.*(VCS="{{ etckeeper_vcs }}")'
@@ -39,18 +51,21 @@
     backrefs=yes
   register: vcs_config_status
 
-- name: Initialize etckeeper repository
+- name: Initialize etckeeper repository.
   command: etckeeper init
-  when: bzr_config_status|changed or vcs_config_status|changed
+  when: bzr_config_status is changed or vcs_config_status is changed
 
-- name: Install tig (git ncurses interface)
-  apt: 
-    pkg: tig 
-    state: installed
+- name: Install tig (git ncurses interface).
+  apt:
+    pkg: tig
+    state: present
   when: etckeeper_vcs == 'git'
 
-- name: Git user configuration (run only once)
-  shell: cd /etc/ && git config --global user.name "{{ etckeeper_git_user_name }}" && git config --global user.email "{{ etckeeper_git_user_email }}" && git commit --amend --reset-author -m "configure author" && touch /etc/.etckeeper.initialized
+- name: Git user configuration (run only once).
+  # when trying to reset author: fatal: You have nothing to amend.
+  #shell: cd /etc/ && git config --global user.name "{{ etckeeper_git_user_name }}" && git config --global user.email "{{ etckeeper_git_user_email }}" && git commit --amend --reset-author -m "configure author" && touch /etc/.etckeeper.initialized
+  shell: cd /etc/ && git config --global user.name "{{ etckeeper_git_user_name }}" && git config --global user.email "{{ etckeeper_git_user_email }}" && touch /etc/.etckeeper.initialized
+
   args:
     creates: /etc/.etckeeper.initialized
   when: etckeeper_vcs == 'git'

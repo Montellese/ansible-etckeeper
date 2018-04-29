@@ -18,7 +18,10 @@ etckeeper_git_user_email: gituser@example.org
 etckeeper_message: "Saving changes from Ansible play running as {{ ansible_user_id }}"
 
 # Example of files to ignore
-# etckeeper_gitignore:
-#   - 'passwd*'
-#   - 'shadow*'
-
+etckeeper_gitignore:
+  - 'passwd'
+  - 'shadow'
+  - 'passwd-'
+  - 'shadow-'
+  # trying to gitignore this will cause an error 
+  # - '.etckeeper'
