@@ -50,6 +50,7 @@
   command: etckeeper init
   when: bzr_config_status is changed or vcs_config_status is changed
 
+## Should check first, if theses items actually exist, and only remove these.
 - name: Remove new .gitignore items from tracking.
   shell: cd /etc/ && git reset "{{ item }}"
   with_items: "{{ etckeeper_gitignore }}"
@@ -59,7 +60,9 @@
   apt:
     pkg: tig
     state: present
-  when: etckeeper_vcs == 'git'
+  when:
+    - etckeeper_vcs == 'git'
+    - etckeeper_install_tig
 
 - name: Git user configuration (run only once).
   # when trying to reset author: fatal: You have nothing to amend.

@@ -11,6 +11,9 @@ commit: true
 # This variable has no effect if etckeeper has already been installed.
 etckeeper_vcs: "git"
 
+# Install TIG, to view git repo.
+etckeeper_install_tig: false
+
 etckeeper_git_user_name:  gitusername
 etckeeper_git_user_email: gituser@example.org
 
@@ -21,7 +24,5 @@ etckeeper_message: "Saving changes from Ansible play running as {{ ansible_user_
 etckeeper_gitignore:
   - 'passwd'
   - 'shadow'
-  - 'passwd-'
-  - 'shadow-'
-  # trying to gitignore this will cause an error 
+  # trying to gitignore this will cause an error
   # - '.etckeeper'
