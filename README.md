@@ -114,7 +114,7 @@ installations and commits, and also uses a shell action to perform commits.
 
 ```
 ## Playbook for etckeeper install
-- name: install etckeeper by itself to initialize etc git-repository (this takes a while).
+- name: install etckeeper by itself to initialize etc git-repository.
   hosts: servers
   user: root
   vars_files:
