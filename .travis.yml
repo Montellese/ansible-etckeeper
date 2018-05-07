@@ -1,41 +1,23 @@
 ---
-language: python
-python: "2.7"
+services: docker
+
 env:
-  - ANSIBLE_VERSION=latest
-  - ANSIBLE_VERSION=2.5
-  - ANSIBLE_VERSION=2.4
-
-branches:
-  only:
-    - master
-
-before_install:
- - sudo apt-get update -qq
- - sudo apt-get install -qq python-apt python-pycurl
-install:
-  # Install Ansible.
-  - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install ansible; else pip install ansible==$ANSIBLE_VERSION; fi
-
-  - echo -e 'localhost  ansible_connection=local' > tests/inventory
-  - echo -e '[defaults]\nroles_path = ../\nhostfile = ./tests/inventory\nremote_user = root' > ansible.cfg
+  - distro: ubuntu1604
+  - distro: ubuntu1404
+  - distro: debian9
+  - distro: debian8
 
 script:
-script:
-  # Check the role/playbook's syntax.
-  - ansible-playbook tests/test.yml --syntax-check
+  # Configure test script so we can run extra tests after playbook is run
+  - export container_id=$(date +%s)
+  - export cleanup=false
 
-  # Run the role/playbook with ansible-playbook.
-  - ansible-playbook tests/test.yml --sudo -vvvv
+  # Download test shim.
+  - wget -O ${PWD}/tests/test.sh https://gist.githubusercontent.com/chriswayg/7cf5afda283252219c37c447ccf3ad88/raw/199f22ced6dd31c948ab2fb6e647a8cd612d337e/ansible-role-test.sh
+  - chmod +x ${PWD}/tests/test.sh
 
-  # Run the role/playbook again, checking to make sure it's idempotent.
-  - >
-    ansible-playbook tests/test.yml --sudo
-    | grep -q 'changed=0.*failed=0'
-    && (echo 'Idempotence test: pass' && exit 0)
-    || (echo 'Idempotence test: fail' && exit 1)
+  # Run tests.
+  - ${PWD}/tests/test.sh
 
 notifications:
-  email:
-    on_failure: always
-    on_success: change
+webhooks: https://galaxy.ansible.com/api/v1/notifications/
