@@ -4,15 +4,15 @@
 
   roles:
     - { role: role_under_test, install: true }
-    - { role: role_under_test, etckeeper_message: 'Ansible record changes during Travis test run' }
-
-  tasks:
-  - name: motd message
-    lineinfile:
-      dest: '/etc/motd'
-      insertbefore: 'BOF'
-      line: "Hello there!"
-
-- hosts: all
-  roles:
-    - { role: role_under_test, etckeeper_message: 'Ansible record changes after file change' }
+#     - { role: role_under_test, etckeeper_message: 'Ansible record changes during Travis test run' }
+#
+#   tasks:
+#   - name: motd message
+#     lineinfile:
+#       dest: '/etc/motd'
+#       insertbefore: 'BOF'
+#       line: "Hello there!"
+#
+# - hosts: all
+#   roles:
+#     - { role: role_under_test, etckeeper_message: 'Ansible record changes after file change' }
