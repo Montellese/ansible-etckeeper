@@ -63,8 +63,14 @@
 
 - name: Git user configuration (run only once).
   # Fix when trying to reset author: fatal: You have nothing to amend.
-  #shell: cd /etc/ && git config --global user.name "{{ etckeeper_git_user_name }}" && git config --global user.email "{{ etckeeper_git_user_email }}" && git commit --amend --reset-author -m "configure author" && touch /etc/.etckeeper.initialized
-  shell: cd /etc/ && git config --global user.name "{{ etckeeper_git_user_name }}" && git config --global user.email "{{ etckeeper_git_user_email }}" && touch /etc/.etckeeper.initialized
+  #shell: cd /etc/ && git config --global user.name "{{ etckeeper_git_user_name }}" 
+  #       && git config --global user.email "{{ etckeeper_git_user_email }}"
+  #       && git commit --amend --reset-author -m "configure author"
+  #       && touch /etc/.etckeeper.initialized
+  shell: >
+    cd /etc/ && git config --global user.name "{{ etckeeper_git_user_name }}"
+    && git config --global user.email "{{ etckeeper_git_user_email }}"
+    && touch /etc/.etckeeper.initialized
 
   args:
     creates: /etc/.etckeeper.initialized
