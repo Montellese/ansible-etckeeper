@@ -4,7 +4,7 @@ ansible-etckeeper
 
 - Tested in Vagrant to work on Debian 9 and Ubuntu 14.04
 
-Ansible role to install, configure, and use etckeeper.
+Ansible role to install, configure, and use etckeeper with git.
 
 This fork is a somewhat simplified version of the original role.
 
