@@ -47,20 +47,6 @@
   command: etckeeper init
   when: bzr_config_status is changed or vcs_config_status is changed
 
-# Ignore files that have already been committed to a Git repository (stackoverflow)
-- name: Removing all new .gitignore items from tracking.
-  shell: git add -A && git commit -m "Initial commit" && git rm -r --quiet --cached . && git add . && git commit -m "Cleanup git-ignore files"
-  args:
-    chdir: /etc/
-
-- name: Install tig (git ncurses interface).
-  apt:
-    name: tig
-    state: present
-  when:
-    - etckeeper_vcs == 'git'
-    - etckeeper_install_tig
-
 - name: Git user configuration (run only once).
   # Fixes: when trying to reset author: fatal: You have nothing to amend.
   #shell: cd /etc/ && git config --global user.name "{{ etckeeper_git_user_name }}"
@@ -75,3 +61,17 @@
   args:
     creates: /etc/.etckeeper.initialized
   when: etckeeper_vcs == 'git'
+
+# Ignore files that have already been committed to a Git repository (stackoverflow)
+- name: Removing all new .gitignore items from tracking.
+  shell: git add -A && git commit -m "Initial commit" && git rm -r --quiet --cached . && git add . && git commit -m "Cleanup git-ignore files"
+  args:
+    chdir: /etc/
+
+- name: Install tig (git ncurses interface).
+  apt:
+    name: tig
+    state: present
+  when:
+    - etckeeper_vcs == 'git'
+    - etckeeper_install_tig
