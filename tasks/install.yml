@@ -10,7 +10,7 @@
     state: touch
   when: not p.stat.exists
 
-- name: Add entries to .gitignore
+- name: Add entries to .gitignore (slow)
   lineinfile:
     dest: '/etc/.gitignore'
     line: "{{ item }}"
@@ -62,8 +62,8 @@
     - etckeeper_install_tig
 
 - name: Git user configuration (run only once).
-  # Fix when trying to reset author: fatal: You have nothing to amend.
-  #shell: cd /etc/ && git config --global user.name "{{ etckeeper_git_user_name }}" 
+  # Fixes: when trying to reset author: fatal: You have nothing to amend.
+  #shell: cd /etc/ && git config --global user.name "{{ etckeeper_git_user_name }}"
   #       && git config --global user.email "{{ etckeeper_git_user_email }}"
   #       && git commit --amend --reset-author -m "configure author"
   #       && touch /etc/.etckeeper.initialized
