@@ -2,7 +2,7 @@
 # tasks file for etckeeper
 
 - name: Install and configure etckeeper
-  include: install.yml
+  include_tasks: install.yml
   when: install
 
 - name: Record changes in etckeeper
