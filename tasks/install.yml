@@ -49,7 +49,7 @@
 
 # Ignore files that have already been committed to a Git repository (stackoverflow)
 - name: Removing all new .gitignore items from tracking.
-  shell: git rm -r --quiet --cached . && git add . && git commit -m "Cleanup git-ignore files"
+  shell: git add -A && git commit -m "Initial commit" && git rm -r --quiet --cached . && git add . && git commit -m "Cleanup git-ignore files"
   args:
     chdir: /etc/
 
