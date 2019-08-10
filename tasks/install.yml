@@ -10,12 +10,12 @@
     state: touch
   when: not p.stat.exists
 
-- name: Add entries to .gitignore (slow)
-  lineinfile:
-    dest: '/etc/.gitignore'
-    line: "{{ item }}"
-    state: present
-  with_items: "{{ etckeeper_gitignore }}"
+- name: Add entries to .gitignore
+  blockinfile:
+    path: '/etc/.gitignore'
+    block: |
+      {{ etckeeper_gitignore }}
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
   when: etckeeper_vcs == 'git'
   register: gitignore_status
 
@@ -47,11 +47,11 @@
   command: etckeeper init
   when: bzr_config_status is changed or vcs_config_status is changed
 
-## Should check first, if theses items actually exist, and only remove these.
-- name: Remove new .gitignore items from tracking.
-  shell: cd /etc/ && git reset "{{ item }}"
-  with_items: "{{ etckeeper_gitignore }}"
-  when: etckeeper_vcs == 'git' and gitignore_status is changed
+# Ignore files that have already been committed to a Git repository (stackoverflow)
+- name: Removing all new .gitignore items from tracking.
+  shell: git rm -r --quiet --cached . && git add . && git commit -m "Cleanup git-ignore files"
+  args:
+    chdir: /etc/
 
 - name: Install tig (git ncurses interface).
   apt:
