@@ -133,13 +133,13 @@ installations and commits, and also uses a shell action to perform commits.
     - production/vars/.site.yml
 
   roles:
-    - { role: record.etckeeper, etckeeper_message: 'Ansible changes at start of mailcow playbook' }
+    - { role: ansible-etckeeper, etckeeper_message: 'Ansible changes at start of mailcow playbook' }
 
     - willshersystems.sshd
-    - { role: record.etckeeper, etckeeper_message: 'Ansible changes due to willshersystems.sshd' }
+    - { role: ansible-etckeeper, etckeeper_message: 'Ansible changes due to willshersystems.sshd' }
 
-    - tersmitten.fail2ban
-    - { role: record.etckeeper, etckeeper_message: 'Ansible changes due to tersmitten.fail2ban' }
+    - ansible-fail2ban
+    - { role: ansible-etckeeper, etckeeper_message: 'Ansible changes due to ansible-fail2ban' }
 ```
 
 License
