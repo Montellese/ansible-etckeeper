@@ -3,10 +3,10 @@
 
 - name: Install and configure etckeeper
   include_tasks: install.yml
-  when: install
+  when: install|bool
 
 - name: Record changes in etckeeper
   shell: "if etckeeper unclean; then etckeeper commit '{{ etckeeper_message }}'; fi"
   register: etckeeper_result
   changed_when: etckeeper_result.stdout.find('changed') != -1
-  when: commit
+  when: commit|bool
