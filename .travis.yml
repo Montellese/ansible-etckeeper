@@ -17,7 +17,7 @@ script:
   - chmod +x ${PWD}/tests/test.sh
 
   # Run tests.
-  - ${PWD}/tests/test.sh
+  - test_idempotence=false ${PWD}/tests/test.sh
 
 notifications:
 webhooks: https://galaxy.ansible.com/api/v1/notifications/
