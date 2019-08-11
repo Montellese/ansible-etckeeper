@@ -5,4 +5,5 @@
   roles:
     - role: role_under_test
       install: true
+      etckeeper_install_tig: true
       commit: false
