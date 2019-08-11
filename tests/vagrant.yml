@@ -1,5 +1,7 @@
 ---
 # tests run by Vagrant
+
+# checking installation
 - hosts: all
   remote_user: vagrant
   become: true
@@ -8,6 +10,7 @@
       install: true
       etckeeper_install_tig: true
 
+# checking, if etckeeper will add the testfile to git
 - hosts: all
   remote_user: vagrant
   become: true
@@ -18,9 +21,17 @@
       register: p
     - name: Create testfile, if it does not exist.
       file:
-        path: /etc/.gitignore
+        path: /etc/testfile
         state: touch
       when: not p.stat.exists
+  roles:
+    - role: ../../
+      install: false
+
+# this should be idempotent
+- hosts: all
+  remote_user: vagrant
+  become: true
   roles:
     - role: ../../
       install: false
