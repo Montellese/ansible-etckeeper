@@ -24,3 +24,5 @@ etckeeper_message: "Saving changes from Ansible play running as {{ ansible_user_
 etckeeper_gitignore: |
   passwd
   shadow
+  passwd-
+  shadow-
