@@ -12,7 +12,6 @@ Thumbs.db
 .virtualbox/
 .vagrant/
 vagrant_ansible_inventory_*
-ansible.cfg
 *.retry
 *-cloudimg-console.log
 
