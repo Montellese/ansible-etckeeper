@@ -4,4 +4,5 @@
 
   roles:
     - role: role_under_test
-      install: true 
+      install: true
+      commit: false
