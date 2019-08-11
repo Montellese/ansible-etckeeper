@@ -16,7 +16,6 @@
     block: |
       {{ etckeeper_gitignore }}
     marker: "# {mark} ANSIBLE MANAGED BLOCK"
-  when: etckeeper_vcs == 'git'
   register: gitignore_status
 
 - name: Install etckeeper.
@@ -25,15 +24,14 @@
     state: present
     install_recommends: no
     update_cache: yes
-  notify: Record changes in etckeeper
 
+# Debian enables git by default, Ubuntu enables bzr.
 - name: Configure etckeeper disable bzr.
   lineinfile:
     dest: /etc/etckeeper/etckeeper.conf
     regexp: '^.*(VCS="bzr")'
     line: '#\1'
     backrefs: yes
-  register: bzr_config_status
 
 - name: Configure etckeeper enable VCS.
   lineinfile:
@@ -41,42 +39,39 @@
     regexp: '^.*(VCS="{{ etckeeper_vcs }}")'
     line: '\1'
     backrefs: yes
-  register: vcs_config_status
 
-- name: Initialize etckeeper repository.
-  command: etckeeper init
-  when: bzr_config_status is changed or vcs_config_status is changed
-
-- name: Git user configuration (run only once).
-  # Fixes: when trying to reset author: fatal: You have nothing to amend.
-  #shell: cd /etc/ && git config --global user.name "{{ etckeeper_git_user_name }}"
-  #       && git config --global user.email "{{ etckeeper_git_user_email }}"
-  #       && git commit --amend --reset-author -m "configure author"
-  #       && touch /etc/.etckeeper.initialized
+# `etckeeper init` is normally automatically performed during package installation.
+- name:  Initialize etckeeper repository (runs once at most).
   shell: >
-    cd /etc/ && git config --global user.name "{{ etckeeper_git_user_name }}"
+    etckeeper init
+  args:
+    chdir: /etc/
+    creates: /etc/.git/description
+
+- name:  Git user configuration (runs only once).
+  shell: >
+    etckeeper init
+    && git config --global user.name "{{ etckeeper_git_user_name }}"
     && git config --global user.email "{{ etckeeper_git_user_email }}"
-    && touch /etc/.etckeeper.initialized
-
-  args:
-    creates: /etc/.etckeeper.initialized
-  when: etckeeper_vcs == 'git'
-
-- name: Git commit all in /etc.
-  shell: git add -A && git commit --quiet -m "An initial commit"
+    && touch /etc/.ansible-etckeeper.configured
   args:
     chdir: /etc/
+    creates: /etc/.ansible-etckeeper.configured
 
-# Ignore files that have already been committed to a Git repository (stackoverflow)
-- name: Removing all new .gitignore items from tracking.
-  shell: git rm -r --quiet --cached . && git add . && git commit -m "Cleanup git-ignore files"
+# 'Ignore files that have already been committed to a Git repository' (stackoverflow)
+# the commands are executed one line at a time
+- name: Remove new gitignore items from tracking
+  shell: |
+    git rm -r --quiet --cached .
+    git add .
+    git commit -m "Cleanup git-ignore files"
   args:
     chdir: /etc/
+  when: gitignore_status.changed
 
 - name: Install tig (git ncurses interface).
   apt:
     name: tig
     state: present
   when:
-    - etckeeper_vcs == 'git'
     - etckeeper_install_tig
