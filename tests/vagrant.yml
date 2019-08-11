@@ -12,9 +12,15 @@
   remote_user: vagrant
   become: true
   pre_tasks:
-    - name: Add a file
+    - name: Check if testfile exists.
+      stat:
+        path: "/etc/testfile"
+      register: p
+    - name: Create testfile, if it does not exist.
       file:
-        path: /etc/foo_added.conf
+        path: /etc/.gitignore
+        state: touch
+      when: not p.stat.exists
   roles:
     - role: ../../
       install: false
