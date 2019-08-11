@@ -4,18 +4,18 @@
 boxes = [
   # {
   #   :name => "ubuntu-1604",
-  #   :box => "generic/ubuntu1604",
+  #   :box => "ubuntu/xenial64",
   #   :ip => '10.0.0.13',
   #   :cpu => "50",
   #   :ram => "256"
   # },
-  # {
-  #   :name => "ubuntu-1804",
-  #   :box => "generic/ubuntu1804",
-  #   :ip => '10.0.0.14',
-  #   :cpu => "50",
-  #   :ram => "512"
-  # },
+  {
+    :name => "ubuntu-1804",
+    :box => "ubuntu/bionic64",
+    :ip => '10.0.0.14',
+    :cpu => "50",
+    :ram => "512"
+  },
   # {
   #   :name => "debian-8",
   #   :box => "generic/debian8",
