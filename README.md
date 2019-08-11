@@ -2,17 +2,17 @@ ansible-etckeeper
 =================
 [![Build Status](https://travis-ci.org/chriswayg/ansible-etckeeper.svg?branch=master)](https://travis-ci.org/chriswayg/ansible-etckeeper)
 
-- Tested in Vagrant to work on Debian 9 and Ubuntu 14.04
+[Etckeeper Documentation](http://etckeeper.branchable.com/README/)
+
+- Tested in Vagrant to work on Debian 10 and Ubuntu 18.04
 
 Ansible role to install, configure, and use etckeeper with git.
-
-This fork is a somewhat simplified version of the original role.
 
 Requirements
 ------------
 
 * Developed and tested with Ansible 2.4+
-* Debian/Ubuntu system (python-apt needed)
+* Debian/Ubuntu system
 
 Role Variables
 --------------
@@ -42,8 +42,7 @@ that controls the version control system that etckeeper will use.
 * **etckeeper_vcs** - *string*  (default is "git", or "hg", "bzr", or "darcs")
 
   This determines the version control system that etckeeper will use.
-  Although the etckeeper package default is Mercurial ("hg"),
-  this Ansible role has only been tested with Git.
+  As the etckeeper package default is Git, this Ansible role has only been tested with Git.
   If etckeeper has already been installed, this variable has no effect.
 
 There is a configuration variable (with example in ``defaults/main.yml``)
@@ -150,6 +149,5 @@ MIT (Expat) - see LICENSE file for details
 Author Information
 ---------------------------
 
-You can contact the original author at [alex.dupuy at mac.com](mailto:alex.dupuy%40mac.com).
-
-This fork modified by Christian Wagner
+- Original author: [alex.dupuy at mac.com](mailto:alex.dupuy%40mac.com).
+- This fork modified by Christian Wagner
