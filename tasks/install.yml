@@ -42,36 +42,34 @@
 
 # `etckeeper init` is normally automatically performed during package installation.
 - name:  Initialize etckeeper repository (runs once at most).
-  shell: >
-    etckeeper init
+  shell: etckeeper init
   args:
     chdir: /etc/
     creates: /etc/.git/description
 
 - name:  Git user configuration (runs only once).
-  shell: >
+  shell: |
     etckeeper init
-    && git config --global user.name "{{ etckeeper_git_user_name }}"
-    && git config --global user.email "{{ etckeeper_git_user_email }}"
-    && touch /etc/.ansible-etckeeper.configured
+    git config --global user.name "{{ etckeeper_git_user_name }}"
+    git config --global user.email "{{ etckeeper_git_user_email }}"
+    touch /etc/.ansible-etckeeper.configured
   args:
     chdir: /etc/
     creates: /etc/.ansible-etckeeper.configured
 
 # 'Ignore files that have already been committed to a Git repository' (stackoverflow)
-# the commands are executed one line at a time
+# TODO fix: The commit gives an error when there is nothing to commit, which can be ignored.
 - name: Remove new gitignore items from tracking
   shell: |
     git rm -r --quiet --cached .
     git add .
-    git commit -m "Cleanup git-ignore files"
+    git commit -m "Cleanup git-ignore files" || true
   args:
     chdir: /etc/
-  when: gitignore_status.changed
+  when: gitignore_status.changed|bool
 
 - name: Install tig (git ncurses interface).
   apt:
     name: tig
     state: present
-  when:
-    - etckeeper_install_tig
+  when: etckeeper_install_tig|bool
