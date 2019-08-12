@@ -42,11 +42,11 @@
 #     backrefs: yes
 
 # `etckeeper init` is normally automatically performed during package installation.
-- name:  Initialize etckeeper repository (runs once at most).
+- name:  Initialize etckeeper repository.
   shell: etckeeper init
   args:
     chdir: /etc/
-    creates: /etc/.git/description
+    creates: /etc/.etckeeper
 
 # sometimes git complains, when this is not configured
 - name:  Git user configuration (runs only once).
