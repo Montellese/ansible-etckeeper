@@ -10,3 +10,13 @@
   register: etckeeper_result
   changed_when: etckeeper_result.stdout.find('changed') != -1
   when: commit|bool
+
+- name: Debug etckeeper_message
+  debug:
+    var: etckeeper_message
+  when: commit|bool
+
+- name: Debug etckeeper_result
+  debug:
+    var: etckeeper_result
+  when: commit|bool
